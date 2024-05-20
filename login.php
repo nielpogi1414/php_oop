@@ -1,6 +1,29 @@
 <?php
 require_once('classes/database.php');
 $con = new database();
+session_start();
+
+
+if (isset($_SESSION['username'])){
+  header('location:index.php');
+}
+
+
+if (isset($_POST['login'])) {
+  $Username=$_POST['Username'];
+  $Pass_word=$_POST['Pass_word'];
+  $result=$con->check($Username, $Pass_word);
+  
+  if ($result) {
+      if ($result['Username'] == $_POST['Username'] && $result['Pass_word'] == $_POST['Pass_word']){
+          $_SESSION['username'] = $result['Username'];
+      
+          header('location:index.php');
+          }
+  else {echo "error";}
+      }
+      else {echo "error";}
+   }  
 ?>
 
 <!DOCTYPE html>
@@ -46,22 +69,6 @@ $con = new database();
   </style>
 </head>
 <body>
-    <?php
- if (isset($_POST['login'])) {
-$Username=$_POST['Username'];
-$Pass_word=$_POST['Pass_word'];
-$result=$con-> check ($Username, $Pass_word);
-if ($result) {
-    if ($result['Username'] == $_POST['Username'] && $result['Pass_word'] == $_POST['Pass_word']){
-        $_SESSION['Username'] = $_result['Username'];
-        header('location:index.php');
-        }
-else {echo "error";}
-    }
-    else {echo "error";}
- }  
- ?>
- 
  
 <div class="container-fluid login-container rounded shadow">
   <h2 class="text-center mb-4">Login</h2>

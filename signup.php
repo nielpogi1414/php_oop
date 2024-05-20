@@ -8,7 +8,7 @@ if (isset($_POST['signup'])) {
     $FirstName = $_POST['FirstName'];
     $LastName = $_POST['LastName'];
     $Birthday = $_POST['Birthday'];
-    $Sex = $_POST['Sex'];
+    $Sex = $_POST['sex'];
     $Username = $_POST['Username'];
     $Pass_word = $_POST['Pass_word'];
     $ConfirmPass_word = $_POST['ConfirmPass_word'];

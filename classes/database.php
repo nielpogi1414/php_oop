@@ -69,4 +69,64 @@ class database{
     }
    
 }
+
+function viewdata($id){
+    try {
+        $con = $this->opencon();
+        $query = $con->prepare("SELECT
+        users.user_id,
+        users.FirstName,
+        users.LastName,
+        users.Birthday,
+        users.Sex,
+        users.Username, 
+        users.Pass_word,
+        user_address.user_add_street,user_address.user_add_province,user_address.user_add_province,user_address.user_add_province
+        
+    FROM
+        users
+    JOIN user_address ON users.user_id = user_address.user_id
+    Where users.user_id =?;");
+        $query->execute([$id]);
+        return $query->fetch();
+    } catch (PDOException $e) {
+        // Handle the exception (e.g. , log error, return empty array. etc.)
+        return [];
+    
+  
+        }
+    }
+
+
+function updateUser($user_id ,$firstname, $lastname, $birthday, $sex, $username, $passwords) {
+    try {
+        $con = $this->opencon();
+        $con->beginTransaction();
+        $query = $con->prepare("UPDATE users SET firstName=?, LastName=?,Birthday=?, Sex=?,Username=?, Pass_word=? WHERE user_id=?");
+        $query->execute([$firstname, $lastname,$birthday,$sex,$username, $passwords, $user_id]);
+        // Update successful
+        $con->commit();
+        return true;
+    } catch (PDOException $e) {
+        // Handle the exception (e.g., log error, return false, etc.)
+         $con->rollBack();
+        return false; // Update failed
+    }
+}
+
+function updateUserAddress($user_id, $street, $barangay, $city, $province) {
+    try {
+        $con = $this->opencon();
+        $con->beginTransaction();
+        $query = $con->prepare("UPDATE user_address SET user_add_street=?, user_add_barangay=?, user_add_city=?, user_add_province=? WHERE user_id=?");
+        $query->execute([$street, $barangay, $city, $province, $user_id]);
+        $con->commit();
+        return true; // Update successful
+    } catch (PDOException $e) {
+        // Handle the exception (e.g., log error, return false, etc.)
+        $con->rollBack();
+        return false; // Update failed
+    }
+     
+}
 }
