@@ -13,8 +13,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
       <li class="nav-item <?php echo ($current_page == 'index.php') ? 'active' : ''; ?>">
         <a class="nav-link" href="index.php">List<span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item <?php echo ($current_page == 'signup.php' OR $current_page == 'update.php') ? 'active' : ''; ?>">
-        <a class="nav-link" href="signup.php">Register</a>
+      <li class="nav-item <?php echo ($current_page == 'register.php' OR $current_page == 'update.php') ? 'active' : ''; ?>">
+        <a class="nav-link" href="register.php">Register</a>
       </li>
       <li class="nav-item <?php echo ($current_page == 'logout.php') ? 'active' : ''; ?>">
         <a class="nav-link" href="logout.php">Logout</a>
