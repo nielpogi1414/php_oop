@@ -1,8 +1,8 @@
 <?php
 session_start();
- if (empty($_SESSION['username'])) {
-    header('location:login.php');
- }
+//  if (empty($_SESSION['username'])) {
+//     header('location:login.php');
+//  }
 require_once('classes/database.php');
 $con = new database();
 $error = "";
@@ -142,9 +142,11 @@ if (isset($_POST['multisave'])) {
         </div>
           <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" class="form-control" name="email" placeholder="Enter email" required>
+            <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" required>
             <div class="valid-feedback">Looks good!</div>
             <div class="invalid-feedback">Please enter a valid email.</div>
+            <div id="emailFeedback" class="invalid-feedback"></div> <!-- New feedback div -->
+        </div>
           </div>
           <div class="form-group">
             <label for="password">Password:</label>
@@ -269,6 +271,7 @@ if (isset($_POST['multisave'])) {
 <script src="./bootstrap-5.3.3-dist/js/bootstrap.js"></script>
 <!-- Script for Address Selector -->
 <script src="ph-address-selector.js"></script>
+<!-- AJAX FOR USERNAME -->
 <script>
 $(document).ready(function(){
     $('#username').on('input', function(){
@@ -287,6 +290,38 @@ $(document).ready(function(){
                     } else {
                         $('#username').removeClass('is-invalid').addClass('is-valid');
                         $('#usernameFeedback').text('');
+                        $('#nextButton').prop('disabled', false); // Enable the Next button
+                    }
+                }
+            });
+        } else {
+            $('#username').removeClass('is-valid is-invalid');
+            $('#usernameFeedback').text('');
+            $('#nextButton').prop('disabled', false); // Enable the Next button if username is empty
+        }
+    });
+});
+
+</script>
+<!-- AJAX FOR EMAIL -->
+<script>
+$(document).ready(function(){
+    $('#email').on('input', function(){
+        var email = $(this).val();
+        if(email.length > 0) {
+            $.ajax({
+                url: 'check_email.php',
+                method: 'POST',
+                data: {email: email},
+                dataType: 'json',
+                success: function(response) {
+                    if(response.exists) {
+                        $('#email').removeClass('is-valid').addClass('is-invalid');
+                        $('#emailFeedback').text('email is already taken.');
+                        $('#nextButton').prop('disabled', true); // Disable the Next button
+                    } else {
+                        $('#email').removeClass('is-invalid').addClass('is-valid');
+                        $('#emailFeedback').text('');
                         $('#nextButton').prop('disabled', false); // Enable the Next button
                     }
                 }

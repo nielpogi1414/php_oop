@@ -5,8 +5,7 @@ $con = new database();
 session_start();
 
 
-
- if (empty($_SESSION['username'])){
+ if (empty($_SESSION['Username'])){
    header('location:login.php');
  }
 
@@ -70,13 +69,14 @@ if(isset($_POST['delete'])){
           <img src="path/to/default/profile/pic.jpg" alt="Default Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;">
         <?php endif; ?>
       </td>
-          <td>1</td>
+          
           <td><?php echo $rows['FirstName'];?></td>
           <td><?php echo $rows['LastName'];?></td>
           <td><?php echo $rows['Birthday'];?></td>
           <td><?php echo $rows['Sex'];?></td>
+          <td><?php echo $rows['Username'];?></td>
           <td><?php echo $rows['address'];?></td>
-          <<td>
+          <td>
           <div class="btn-group" role="group">
           <form action="update.php" method="post" class="d-inline">
                                     <input type="hidden" name="id" value="<?php echo $rows['user_id']; ?>">
