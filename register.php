@@ -1,7 +1,7 @@
 <?php
-session_start();
+ session_start();
 //  if (empty($_SESSION['username'])) {
-//     header('location:login.php');
+//      header('location:login.php');
 //  }
 require_once('classes/database.php');
 $con = new database();
@@ -28,16 +28,12 @@ if (isset($_POST['multisave'])) {
    // Handle file upload
    $target_dir = "uploads/";
    $original_file_name = basename($_FILES["profile_picture"]["name"]);
-   
    // NEW CODE: Initialize $new_file_name with $original_file_name
     $new_file_name = $original_file_name; 
-   
-   
     $target_file = $target_dir . $original_file_name;
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     $uploadOk = 1;
    
-   // Check if file already exists and rename if necessary
  // Check if file already exists and rename if necessary
  if (file_exists($target_file)) {
    // Generate a unique file name by appending a timestamp
@@ -100,8 +96,6 @@ if (isset($_POST['multisave'])) {
 }
 ?>
 
-
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -142,11 +136,10 @@ if (isset($_POST['multisave'])) {
         </div>
           <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" required>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
             <div class="valid-feedback">Looks good!</div>
             <div class="invalid-feedback">Please enter a valid email.</div>
             <div id="emailFeedback" class="invalid-feedback"></div> <!-- New feedback div -->
-        </div>
           </div>
           <div class="form-group">
             <label for="password">Password:</label>
@@ -161,6 +154,7 @@ if (isset($_POST['multisave'])) {
             <div class="valid-feedback">Looks good!</div>
             <div class="invalid-feedback">Please confirm your password.</div>
           </div>
+
         </div>
       </div>
       <button type="button" id="nextButton" class="btn btn-primary mt-3" onclick="nextStep()">Next</button>
@@ -217,7 +211,6 @@ if (isset($_POST['multisave'])) {
     </div>
     </div>
 
-
     <!-- Step 3 -->
     <div class="form-step" id="step-3">
       <div class="card mt-4">
@@ -271,7 +264,7 @@ if (isset($_POST['multisave'])) {
 <script src="./bootstrap-5.3.3-dist/js/bootstrap.js"></script>
 <!-- Script for Address Selector -->
 <script src="ph-address-selector.js"></script>
-<!-- AJAX FOR USERNAME -->
+<!-- AJAX for live checking of existing usernames -->
 <script>
 $(document).ready(function(){
     $('#username').on('input', function(){
@@ -303,7 +296,7 @@ $(document).ready(function(){
 });
 
 </script>
-<!-- AJAX FOR EMAIL -->
+<!-- AJAX for live checking of existing emails -->
 <script>
 $(document).ready(function(){
     $('#email').on('input', function(){
@@ -317,23 +310,25 @@ $(document).ready(function(){
                 success: function(response) {
                     if(response.exists) {
                         $('#email').removeClass('is-valid').addClass('is-invalid');
-                        $('#emailFeedback').text('email is already taken.');
+                        $('#emailFeedback').text('Email is already taken.');
                         $('#nextButton').prop('disabled', true); // Disable the Next button
                     } else {
                         $('#email').removeClass('is-invalid').addClass('is-valid');
                         $('#emailFeedback').text('');
                         $('#nextButton').prop('disabled', false); // Enable the Next button
                     }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
                 }
             });
         } else {
-            $('#username').removeClass('is-valid is-invalid');
-            $('#usernameFeedback').text('');
-            $('#nextButton').prop('disabled', false); // Enable the Next button if username is empty
+            $('#email').removeClass('is-valid is-invalid');
+            $('#emailFeedback').text('');
+            $('#nextButton').prop('disabled', false); // Enable the Next button if email is empty
         }
     });
 });
-
 </script>
 
 <!-- Script for Form Validation -->
@@ -343,7 +338,6 @@ $(document).ready(function(){
       const birthdayInput = document.getElementById("birthday");
       const steps = document.querySelectorAll(".form-step");
       let currentStep = 0;
-
 
   
       // Set the max attribute of the birthday input to today's date
@@ -457,7 +451,6 @@ function validateStep(step) {
             event.preventDefault(); // Prevent form submission
         }
     });
-
 
       
     

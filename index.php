@@ -1,22 +1,19 @@
 <?php
-
 require_once('classes/database.php');
 $con = new database();
 session_start();
 
-
- if (empty($_SESSION['Username'])){
-   header('location:login.php');
- }
-
-if(isset($_POST['delete'])){
-    $id = $_POST['id'];
-    if($con->delete($id)) {
-        header('location:index.php');
-    }else{
-        echo"something went wrong.";
-    }
-    }
+// if(empty($_SESSION["username"]))  {
+//   header('location:login.php');
+// }
+if (isset($_POST['delete'])) {
+  $id = $_POST['id'];
+  if ($con->delete($id)) {
+    header('location:index.php?status=success');
+  } else {
+    echo "Something went wrong.";
+  }
+  }
 
 
 ?>
@@ -33,12 +30,15 @@ if(isset($_POST['delete'])){
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="./includes/style.css">
+
+<link rel="stylesheet" href="package/dist/sweetalert2.css">
 </head>
 <body>
+
 <?php include('includes/navbar.php'); ?>
 <div class="container user-info rounded shadow p-3 my-2">
 <h2 class="text-center mb-2">User Table</h2>
-  <div class="table-responsive">
+  <div class="table-responsive text-center">
     <table class="table table-bordered">
       <thead>
         <tr>
@@ -50,16 +50,17 @@ if(isset($_POST['delete'])){
           <th>Sex</th>
           <th>Username</th>
           <th>Address</th>
-          <th>Action</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
-      
-      <?php
-      $counter = 1;
-      $data = $con->view();
-      foreach ($data as $rows) {
-        ?>
+
+      <?php 
+        $counter = 1;
+        $data = $con->view();
+        foreach ($data as $rows) {
+      ?>
+
         <tr>
           <td><?php echo $counter++?></td>
           <td>
@@ -69,13 +70,13 @@ if(isset($_POST['delete'])){
           <img src="path/to/default/profile/pic.jpg" alt="Default Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;">
         <?php endif; ?>
       </td>
-          
           <td><?php echo $rows['FirstName'];?></td>
           <td><?php echo $rows['LastName'];?></td>
           <td><?php echo $rows['Birthday'];?></td>
           <td><?php echo $rows['Sex'];?></td>
           <td><?php echo $rows['Username'];?></td>
           <td><?php echo $rows['address'];?></td>
+        
           <td>
           <div class="btn-group" role="group">
           <form action="update.php" method="post" class="d-inline">
@@ -92,17 +93,16 @@ if(isset($_POST['delete'])){
                                 </form>
         </div>
         </td>
-        
         </tr>
-        <?php
-      }
-?>      
-        <!-- Add more row`s for `additional users -->
-      </tbody>
 
+        <?php
+        }
+        ?>
+
+        <!-- Add more rows for additional users -->
+      </tbody>
     </table>
-  </div>
-  <div class="container my-5">
+    <div class="container my-5">
         <h2 class="text-center">User Profiles</h2>
         <div class="card-container">
             <?php
@@ -130,10 +130,13 @@ if(isset($_POST['delete'])){
                         <input type="submit" name="delete" class="btn btn-danger btn-sm" value="Delete" onclick="return confirm('Are you sure you want to delete this user?')">
                     </form>
                 </div>
-                </div>
+            </div>
             <?php
             }
             ?>
+        </div>
+    </div>
+  </div>
 </div>
 </div>
 
@@ -144,6 +147,42 @@ if(isset($_POST['delete'])){
 <script src="./bootstrap-5.3.3-dist/js/bootstrap.js"></script>
 <!-- Bootsrap JS na nagpapagana ng danger alert natin -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="package/dist/sweetalert2.js"></script>
+
+
+<!-- Pop Up Messages after a succesful transaction starts here --> <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const params = new URLSearchParams(window.location.search);
+  const status = params.get('status');
+
+  if (status) {
+    let title, text, icon;
+    switch (status) {
+      case 'success':
+        title = 'Success!';
+        text = 'Record is successfully deleted.';
+        icon = 'success';
+        break;
+      case 'error':
+        title = 'Error!';
+        text = 'Something went wrong.';
+        icon = 'error';     
+        break;
+      default:
+        return;
+    }
+    Swal.fire({
+      title: title,
+      text: text,
+      icon: icon
+    }).then(() => {
+      // Remove the status parameter from the URL
+      const newUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState(null, null, newUrl);
+    });
+  }
+});
+</script> <!-- Pop Up Messages after a succesful transaction ends here -->
 
 </body>
 </html>

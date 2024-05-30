@@ -16,6 +16,7 @@ if (isset($_POST['login'])) {
 
   if ($result) {
       $_SESSION['Username'] = $result['Username'];
+      $_SESSION['user_id'] = $result['user_id'];
       header('location:index.php');
   } else {
       $error = "Incorrect username or password. Please try again.";
